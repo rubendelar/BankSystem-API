@@ -6,6 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Admins extends AccountHolders {
+public class Admins extends UserType {
 
 }
