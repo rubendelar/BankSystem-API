@@ -21,6 +21,8 @@ public class Savings extends AccountType {
     @DecimalMin(value = "0.5")
     private BigDecimal interestRate;
 
+    private LocalDate lastTimeInterestRate = LocalDate.now();
+
     public Savings(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status, String secretKey, BigDecimal minimumBalance, BigDecimal interestRate) {
         super(primaryOwner, secondaryOwner, balance, status);
         this.secretKey = secretKey;
@@ -50,7 +52,15 @@ public class Savings extends AccountType {
     }
 
     public void setInterestRate(BigDecimal interestRate) {
-        if (interestRate == null) this.interestRate = new BigDecimal(0.0025);
+        if (interestRate == null) this.interestRate = new BigDecimal("0.0025");
         else this.interestRate = interestRate;
+    }
+
+    public LocalDate getLastTimeInterestRate() {
+        return lastTimeInterestRate;
+    }
+
+    public void setLastTimeInterestRate(LocalDate lastTimeInterestRate) {
+        this.lastTimeInterestRate = lastTimeInterestRate;
     }
 }

@@ -17,6 +17,7 @@ public class StudentChecking extends AccountType {
         this.secretKey = secretKey;
     }
 
+
     public String getSecretKey() {
         return secretKey;
     }

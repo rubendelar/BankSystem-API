@@ -33,6 +33,7 @@ public abstract class AccountType {
     public AccountType() {
     }
 
+    //Quitar el status del constructor?
     public AccountType( AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status) {
 
         this.primaryOwner = primaryOwner;
@@ -70,8 +71,17 @@ public abstract class AccountType {
     }
 
     public void setBalance(BigDecimal balance) {
+        if (this instanceof Savings) {
+            ((Savings) this).getMinimumBalance();
+        }
         this.balance = balance;
     }
+
+//    if (account instanceof Savings) {
+//        Savings savingsAccount = (Savings) account;
+
+
+
 
     public BigDecimal getPenaltyFee() {
         return penaltyFee;
