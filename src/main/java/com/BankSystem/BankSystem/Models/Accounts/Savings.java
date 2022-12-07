@@ -14,11 +14,12 @@ public class Savings extends AccountType {
 
     private String secretKey;
 
-    @Min(value = 100)
-    private BigDecimal minimumBalance = BigDecimal.valueOf(1000);
+    @DecimalMin(value = "100")
+    @DecimalMax(value = "1000")
+    private BigDecimal minimumBalance;
 
     @DecimalMin(value = "0.5")
-    private BigDecimal interestRate = BigDecimal.valueOf(0.0025);
+    private BigDecimal interestRate;
 
     public Savings(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status, String secretKey, BigDecimal minimumBalance, BigDecimal interestRate) {
         super(primaryOwner, secondaryOwner, balance, status);
@@ -40,7 +41,8 @@ public class Savings extends AccountType {
     }
 
     public void setMinimumBalance(BigDecimal minimumBalance) {
-        this.minimumBalance = minimumBalance;
+        if (minimumBalance == null) this.minimumBalance = new BigDecimal(1000);
+        else this.minimumBalance = minimumBalance;
     }
 
     public BigDecimal getInterestRate() {
@@ -48,6 +50,7 @@ public class Savings extends AccountType {
     }
 
     public void setInterestRate(BigDecimal interestRate) {
-        this.interestRate = interestRate;
+        if (interestRate == null) this.interestRate = new BigDecimal(0.0025);
+        else this.interestRate = interestRate;
     }
 }

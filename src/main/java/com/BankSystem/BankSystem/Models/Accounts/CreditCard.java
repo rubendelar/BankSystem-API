@@ -17,12 +17,12 @@ public class CreditCard extends AccountType {
     private BigDecimal creditLimit;
 
     @DecimalMin(value = "0.1")
-    private BigDecimal interestRate = BigDecimal.valueOf(0.2);
+    private BigDecimal interestRate;
 
     public CreditCard(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status, BigDecimal creditLimit, BigDecimal interestRate) {
         super(primaryOwner, secondaryOwner, balance, status);
         setCreditLimit(creditLimit);
-        this.interestRate = interestRate;
+        setInterestRate(interestRate);
     }
 
     public BigDecimal getCreditLimit() {
@@ -39,7 +39,8 @@ public class CreditCard extends AccountType {
     }
 
     public void setInterestRate(BigDecimal interestRate) {
-        this.interestRate = interestRate;
+        if (interestRate == null) this.interestRate = new BigDecimal(0.2);
+        else this.interestRate = interestRate;
     }
 }
 
