@@ -72,15 +72,19 @@ public abstract class AccountType {
 
     public void setBalance(BigDecimal balance) {
         if (this instanceof Savings) {
-            ((Savings) this).getMinimumBalance();
+            Savings savingsAccount = (Savings) this;
+            if (savingsAccount.getBalance().compareTo(savingsAccount.getMinimumBalance())==-1){
+                savingsAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+            }
+        }
+        if (this instanceof Checking) {
+            Checking checkingAccount = (Checking) this;
+            if (checkingAccount.getBalance().compareTo(checkingAccount.getMinimumBalance())==-1){
+                checkingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+            }
         }
         this.balance = balance;
     }
-
-//    if (account instanceof Savings) {
-//        Savings savingsAccount = (Savings) account;
-
-
 
 
     public BigDecimal getPenaltyFee() {

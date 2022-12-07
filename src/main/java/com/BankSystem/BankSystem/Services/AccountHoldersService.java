@@ -64,7 +64,7 @@ public class AccountHoldersService {
        if (accountTypeRepository.findById(id).get().getAccountCreation().isBefore(todaysDateMinus1Month)) {
            if(account instanceof CreditCard){
                CreditCard creditCardAccount = (CreditCard) account;
-               if(Period.between(creditCardAccount.getLastTimeInterestRate(), LocalDate.now()).getYears() >= 1){
+               if(Period.between(creditCardAccount.getLastTimeInterestRate(), LocalDate.now()).getMonths() >= 1){
                    creditCardAccount.setBalance(creditCardAccount.getBalance().add(creditCardAccount.getBalance().multiply(creditCardAccount.getInterestRate())));
                    creditCardAccount.setLastTimeInterestRate(LocalDate.now());
                    creditCardRepository.save(creditCardAccount);
