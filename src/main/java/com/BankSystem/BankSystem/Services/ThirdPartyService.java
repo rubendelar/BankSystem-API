@@ -2,6 +2,7 @@ package com.BankSystem.BankSystem.Services;
 
 import com.BankSystem.BankSystem.Models.Accounts.AccountType;
 import com.BankSystem.BankSystem.Models.Accounts.Status;
+import com.BankSystem.BankSystem.Models.DTO.ThirdPartyTransferDTO;
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
 import com.BankSystem.BankSystem.Repositories.Accounts.AccountTypeRepository;
 import com.BankSystem.BankSystem.Repositories.Users.ThirdPartyRepository;
@@ -21,15 +22,20 @@ public class ThirdPartyService {
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
 
-    public AccountType thirdPartyTransfer (String hashKey, Integer thirdPartyId, Integer AccountId, String accountSecretKey, BigDecimal transferFunds) {
-        if (thirdPartyRepository.findById(thirdPartyId).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ThirdParty not found");
-        if (!hashKey.equals(thirdPartyRepository.findById(thirdPartyId).get().getHashKey())) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ThirdParty not found");
-        if (accountTypeRepository.findById(AccountId).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
-        if (accountTypeRepository.findById(AccountId).get().getStatus().equals(Status.FROZEN)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sending Account is Frozen");
-        if (!accountSecretKey.equals(accountTypeRepository.findById(AccountId).get().getSecretKey())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Secret Key");
+    public AccountType thirdPartyTransfer (ThirdPartyTransferDTO thirdPartyTransferDTO) {
+        if (thirdPartyRepository.findById(thirdPartyTransferDTO.getThirdPartyId()).isEmpty()) throw
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "ThirdParty not found");
+        if (!thirdPartyTransferDTO.getHashKey().equals(thirdPartyRepository.findById(thirdPartyTransferDTO.getThirdPartyId()).get().getHashKey())) throw
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "ThirdParty not found");
+        if (accountTypeRepository.findById(thirdPartyTransferDTO.getAccountId()).isEmpty()) throw
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        if (accountTypeRepository.findById(thirdPartyTransferDTO.getAccountId()).get().getStatus().equals(Status.FROZEN)) throw
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sending Account is Frozen");
+        if (!thirdPartyTransferDTO.getAccountSecretKey().equals(accountTypeRepository.findById(thirdPartyTransferDTO.getAccountId()).get().getSecretKey())) throw
+                new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Secret Key");
 
-        AccountType account = accountTypeRepository.findById(AccountId).get();
-        account.setBalance(account.getBalance().add(transferFunds));
+        AccountType account = accountTypeRepository.findById(thirdPartyTransferDTO.getAccountId()).get();
+        account.setBalance(account.getBalance().add(thirdPartyTransferDTO.getTransferFunds()));
         return accountTypeRepository.save(account);
     }
 

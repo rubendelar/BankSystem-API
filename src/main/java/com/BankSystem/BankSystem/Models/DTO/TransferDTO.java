@@ -3,16 +3,15 @@ package com.BankSystem.BankSystem.Models.DTO;
 import java.math.BigDecimal;
 
 public class TransferDTO {
-    //Integer sendingId, Integer receivingId, String receivingOwnersName, BigDecimal transferFunds
 
     private Integer sendingId;
-    private Integer recevinginId;
+    private Integer receivingId;
     private String receivingOwnersName;
     private BigDecimal transferFunds;
 
-    public TransferDTO(Integer sendingId, Integer recevinginId, String receivingOwnersName, BigDecimal transferFunds) {
+    public TransferDTO(Integer sendingId, Integer receivingId, String receivingOwnersName, BigDecimal transferFunds) {
         this.sendingId = sendingId;
-        this.recevinginId = recevinginId;
+        this.receivingId = receivingId;
         this.receivingOwnersName = receivingOwnersName;
         this.transferFunds = transferFunds;
     }
@@ -25,12 +24,12 @@ public class TransferDTO {
         this.sendingId = sendingId;
     }
 
-    public Integer getRecevinginId() {
-        return recevinginId;
+    public Integer getReceivingId() {
+        return receivingId;
     }
 
-    public void setRecevinginId(Integer recevinginId) {
-        this.recevinginId = recevinginId;
+    public void setReceivingId(Integer receivingId) {
+        this.receivingId = receivingId;
     }
 
     public String getReceivingOwnersName() {

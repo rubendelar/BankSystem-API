@@ -2,9 +2,7 @@ package com.BankSystem.BankSystem.Services;
 
 import com.BankSystem.BankSystem.Models.Accounts.*;
 import com.BankSystem.BankSystem.Models.DTO.TransferDTO;
-import com.BankSystem.BankSystem.Models.Users.AccountHolders;
 import com.BankSystem.BankSystem.Repositories.Accounts.AccountTypeRepository;
-import com.BankSystem.BankSystem.Repositories.Accounts.CheckingRepository;
 import com.BankSystem.BankSystem.Repositories.Accounts.CreditCardRepository;
 import com.BankSystem.BankSystem.Repositories.Accounts.SavingsRepository;
 import com.BankSystem.BankSystem.Repositories.Users.AccountHoldersRepository;
@@ -86,11 +84,11 @@ public class AccountHoldersService {
         if (accountTypeRepository.findById(transferDTO.getSendingId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sending account not found");
         if (accountTypeRepository.findById(transferDTO.getSendingId()).get().getBalance() == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This account does have not funds yet");
         if (accountTypeRepository.findById(transferDTO.getSendingId()).get().getStatus().equals(Status.FROZEN)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sending Account is Frozen");
-        if (accountTypeRepository.findById(transferDTO.getRecevinginId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiving account not found");
-        if (accountTypeRepository.findById(transferDTO.getRecevinginId()).get().getStatus().equals(Status.FROZEN)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receiving Account is Frozen");
+        if (accountTypeRepository.findById(transferDTO.getReceivingId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiving account not found");
+        if (accountTypeRepository.findById(transferDTO.getReceivingId()).get().getStatus().equals(Status.FROZEN)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receiving Account is Frozen");
 
         AccountType sendingAccount = accountTypeRepository.findById(transferDTO.getSendingId()).get();
-        AccountType receivingAccount = accountTypeRepository.findById(transferDTO.getRecevinginId()).get();
+        AccountType receivingAccount = accountTypeRepository.findById(transferDTO.getReceivingId()).get();
 
         if(sendingAccount.getBalance().compareTo(transferDTO.getTransferFunds()) > 0) throw
          new ResponseStatusException(HttpStatus.BAD_REQUEST, "The account doesn't have enough funds");
