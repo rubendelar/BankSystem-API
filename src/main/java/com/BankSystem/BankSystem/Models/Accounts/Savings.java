@@ -12,8 +12,6 @@ import java.util.List;
 public class Savings extends AccountType {
 
 
-    private String secretKey;
-
     @DecimalMin(value = "100")
     @DecimalMax(value = "1000")
     private BigDecimal minimumBalance;
@@ -23,19 +21,13 @@ public class Savings extends AccountType {
 
     private LocalDate lastTimeInterestRate = LocalDate.now();
 
-    public Savings(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status, String secretKey, BigDecimal minimumBalance, BigDecimal interestRate) {
-        super(primaryOwner, secondaryOwner, balance, status);
-        this.secretKey = secretKey;
+    public Savings(AccountHolders primaryOwner, AccountHolders secondaryOwner,
+                   BigDecimal balance, String secretKey, Status status, BigDecimal minimumBalance,
+                   BigDecimal interestRate, LocalDate lastTimeInterestRate) {
+        super(primaryOwner, secondaryOwner, balance, secretKey, status);
         this.minimumBalance = minimumBalance;
         this.interestRate = interestRate;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
+        this.lastTimeInterestRate = lastTimeInterestRate;
     }
 
     public BigDecimal getMinimumBalance() {

@@ -12,25 +12,13 @@ import java.util.List;
 @Entity
 public class Checking extends AccountType {
 
-    private String secretKey;
-
 
     private final BigDecimal minimumBalance = new BigDecimal(250);
 
-
     private final BigDecimal monthlyMaintenanceFee = new BigDecimal(12);
 
-    public Checking( AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status, String secretKey) {
-        super(primaryOwner, secondaryOwner, balance, status);
-        this.secretKey = secretKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
+    public Checking(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, String secretKey, Status status) {
+        super(primaryOwner, secondaryOwner, balance, secretKey, status);
     }
 
     public BigDecimal getMinimumBalance() {

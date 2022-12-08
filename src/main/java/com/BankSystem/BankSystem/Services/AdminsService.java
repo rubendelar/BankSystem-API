@@ -7,7 +7,9 @@ import com.BankSystem.BankSystem.Repositories.Accounts.AccountTypeRepository;
 import com.BankSystem.BankSystem.Repositories.Users.AdminsRepository;
 import com.BankSystem.BankSystem.Repositories.Users.ThirdPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,27 +24,51 @@ public class AdminsService {
     ThirdPartyRepository thirdPartyRepository;
 
     public BigDecimal getAnyAccountBalance(Integer id) {
-        if (accountTypeRepository.findById(id).isEmpty() || accountTypeRepository.findById(id).get().getBalance() == null) throw new IllegalArgumentException("Account not found");
+        if (accountTypeRepository.findById(id).isEmpty() || accountTypeRepository.findById(id).get().getBalance() == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
         else return accountTypeRepository.findById(id).get().getBalance();
     }
 
-    public void setAnyAccountBalance(Integer id, BigDecimal fund) {
-        if (accountTypeRepository.findById(id).isEmpty()) throw new IllegalArgumentException("Account not found");
-        else accountTypeRepository.findById(id).get().setBalance(fund);
+    public AccountType setAnyAccountBalance(Integer id, BigDecimal fund) {
+        if (accountTypeRepository.findById(id).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        else {
+            AccountType accountType = accountTypeRepository.findById(id).get();
+            accountType.setBalance(fund);
+            return accountTypeRepository.save(accountType);
+        }
     }
 
-    //El hashKey esta configurado como autogenerado pero tengo que ponerlo igual ?
-    public void createThirdPartyUser (String hashKey, String name) {
-        ThirdParty thirdParty = new ThirdParty(hashKey, name);
-        thirdPartyRepository.save(thirdParty);
+    public ThirdParty createThirdPartyUser (String name) {
+        ThirdParty thirdParty = new ThirdParty(name);
+        return thirdPartyRepository.save(thirdParty);
     }
 
-    public void setThirdPartyUserName (Integer id, String newName) {
-       if (thirdPartyRepository.findById(id).isEmpty()) throw new IllegalArgumentException("Can not find Third Party user with provided ID");
+    public String deleteAccount (Integer id) {
+        if (accountTypeRepository.findById(id).isPresent()){
+            accountTypeRepository.deleteById(id);
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find Account with provided ID");
+
+        return "Account has been deleted";
+    }
+
+    public String deleteThirdPartyUser (Integer id) {
+        if (thirdPartyRepository.findById(id).isPresent()){
+        thirdPartyRepository.deleteById(id);
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find Third Party user with provided ID");
+
+        return "ThirdPartyUser has been deleted";
+    }
+
+
+
+
+
+    public ThirdParty setThirdPartyUserName (Integer id, String newName) {
+       if (thirdPartyRepository.findById(id).isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find Third Party user with provided ID");
        else {
-           thirdPartyRepository.findById(id).get().setName(newName);
-
-           //Como guardar esto el nuevo nombre en el repositorio? Deberia haberle puesto un nombre para hacer el .save()?
+           ThirdParty thirdParty = thirdPartyRepository.findById(id).get();
+           thirdParty.setName(newName);
+           return thirdPartyRepository.save(thirdParty);
        }
     }
 }

@@ -20,8 +20,7 @@ public class ThirdParty{
     public ThirdParty() {
     }
 
-    public ThirdParty(String key, String name) {
-        this.hashKey = key;
+    public ThirdParty(String name) {
         this.name = name;
     }
 

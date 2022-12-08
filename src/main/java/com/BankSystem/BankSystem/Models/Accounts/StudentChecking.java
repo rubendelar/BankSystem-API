@@ -10,20 +10,9 @@ import java.util.List;
 @Entity
 public class StudentChecking extends AccountType {
 
-    private String secretKey;
-
-    public StudentChecking(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status, String secretKey) {
-        super(primaryOwner, secondaryOwner, balance, status);
-        this.secretKey = secretKey;
-    }
-
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
+    public StudentChecking(AccountHolders primaryOwner, AccountHolders secondaryOwner,
+                           BigDecimal balance, String secretKey, Status status) {
+        super(primaryOwner, secondaryOwner, balance, secretKey, status);
     }
 }
 

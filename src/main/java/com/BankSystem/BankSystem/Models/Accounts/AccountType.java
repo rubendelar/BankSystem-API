@@ -25,6 +25,8 @@ public abstract class AccountType {
 
     private BigDecimal penaltyFee = BigDecimal.valueOf(40);
 
+    private String secretKey;
+
     private LocalDate accountCreation = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
@@ -33,14 +35,14 @@ public abstract class AccountType {
     public AccountType() {
     }
 
-
-    public AccountType( AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status) {
-
+    public AccountType(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, String secretKey, Status status) {
         this.primaryOwner = primaryOwner;
         this.secondaryOwner = secondaryOwner;
         this.balance = balance;
+        this.secretKey = secretKey;
         this.status = status;
     }
+
 
     public Integer getId() {
         return id;
@@ -71,14 +73,12 @@ public abstract class AccountType {
     }
 
     public void setBalance(BigDecimal balance) {
-        if (this instanceof Savings) {
-            Savings savingsAccount = (Savings) this;
+        if (this instanceof Savings savingsAccount) {
             if (savingsAccount.getBalance().compareTo(savingsAccount.getMinimumBalance())==-1){
                 savingsAccount.setBalance(getBalance().subtract(getPenaltyFee()));
             }
         }
-        if (this instanceof Checking) {
-            Checking checkingAccount = (Checking) this;
+        if (this instanceof Checking checkingAccount) {
             if (checkingAccount.getBalance().compareTo(checkingAccount.getMinimumBalance())==-1){
                 checkingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
             }
@@ -109,5 +109,13 @@ public abstract class AccountType {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
 }

@@ -1,6 +1,7 @@
 package com.BankSystem.BankSystem.Services;
 
 import com.BankSystem.BankSystem.Models.Accounts.*;
+import com.BankSystem.BankSystem.Models.DTO.TransferDTO;
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
 import com.BankSystem.BankSystem.Repositories.Accounts.AccountTypeRepository;
 import com.BankSystem.BankSystem.Repositories.Accounts.CheckingRepository;
@@ -8,7 +9,9 @@ import com.BankSystem.BankSystem.Repositories.Accounts.CreditCardRepository;
 import com.BankSystem.BankSystem.Repositories.Accounts.SavingsRepository;
 import com.BankSystem.BankSystem.Repositories.Users.AccountHoldersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,7 +35,7 @@ public class AccountHoldersService {
 
     public List<AccountType> getAccounts(Integer id) {
 
-        if (accountHoldersRepository.findById(id).isEmpty()) throw new IllegalArgumentException("Account not found");
+        if (accountHoldersRepository.findById(id).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
         else return accountHoldersRepository.findById(id).get().getPrimaryOwnerList();
     }
 
@@ -43,15 +46,12 @@ public class AccountHoldersService {
         LocalDate todaysDateMinus1Month = LocalDate.now().minusMonths(1);
         AccountType account = accountTypeRepository.findById(id).get();
 
-        if (accountTypeRepository.findById(id).isEmpty()) throw new IllegalArgumentException("Account not found");
-
-        if (accountTypeRepository.findById(id).get().getBalance() == null) throw new IllegalArgumentException("Account has not funds");
-
+        if (accountTypeRepository.findById(id).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        if (accountTypeRepository.findById(id).get().getBalance() == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account has not funds");
 
         //Adding Interest Rate to the SavingsBalance -yearly
        if (accountTypeRepository.findById(id).get().getAccountCreation().isBefore(todaysDateMinus1Year)) {
-           if (account instanceof Savings) {
-               Savings savingsAccount = (Savings) account;
+           if (account instanceof Savings savingsAccount) {
                if (Period.between(savingsAccount.getLastTimeInterestRate(), LocalDate.now()).getYears() >= 1) {
                    savingsAccount.setBalance(savingsAccount.getBalance().add(savingsAccount.getBalance().multiply(savingsAccount.getInterestRate())));
                    savingsAccount.setLastTimeInterestRate(LocalDate.now());
@@ -64,8 +64,7 @@ public class AccountHoldersService {
 
         //Adding Interest Rate to the CreditCardBalance -monthly
        if (accountTypeRepository.findById(id).get().getAccountCreation().isBefore(todaysDateMinus1Month)) {
-           if(account instanceof CreditCard){
-               CreditCard creditCardAccount = (CreditCard) account;
+           if(account instanceof CreditCard creditCardAccount){
                if(Period.between(creditCardAccount.getLastTimeInterestRate(), LocalDate.now()).getMonths() >= 1){
                    creditCardAccount.setBalance(creditCardAccount.getBalance().add(creditCardAccount.getBalance().multiply(creditCardAccount.getInterestRate())));
                    creditCardAccount.setLastTimeInterestRate(LocalDate.now());
@@ -81,40 +80,30 @@ public class AccountHoldersService {
     }
 
 
-
     //To transfer money from any of their accounts to any other account:
-    public void transfer(Integer sendingId, Integer receivingId, String receivingOwnersName, BigDecimal transferFunds ) {
+    public BigDecimal transfer(TransferDTO transferDTO) {
 
-        if (accountTypeRepository.findById(sendingId).isEmpty()) throw new IllegalArgumentException("Sending account not found");
-        if (accountTypeRepository.findById(sendingId).get().getBalance() == null) throw new IllegalArgumentException("This account does have not funds yet");
-        if (accountTypeRepository.findById(sendingId).get().getStatus().equals(Status.FROZEN)) throw new IllegalArgumentException("Sending Account is Frozen");
-        BigDecimal sendingAccountBalance = accountTypeRepository.findById(sendingId).get().getBalance();
+        if (accountTypeRepository.findById(transferDTO.getSendingId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sending account not found");
+        if (accountTypeRepository.findById(transferDTO.getSendingId()).get().getBalance() == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This account does have not funds yet");
+        if (accountTypeRepository.findById(transferDTO.getSendingId()).get().getStatus().equals(Status.FROZEN)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sending Account is Frozen");
+        if (accountTypeRepository.findById(transferDTO.getRecevinginId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiving account not found");
+        if (accountTypeRepository.findById(transferDTO.getRecevinginId()).get().getStatus().equals(Status.FROZEN)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Receiving Account is Frozen");
 
-        if (accountTypeRepository.findById(receivingId).isEmpty()) throw new IllegalArgumentException("Receiving account not found");
+        AccountType sendingAccount = accountTypeRepository.findById(transferDTO.getSendingId()).get();
+        AccountType receivingAccount = accountTypeRepository.findById(transferDTO.getRecevinginId()).get();
 
-        AccountHolders receivingPrimaryOwnersName = null;
-        AccountHolders receivingSecondaryOwnersName = null;
+        if(sendingAccount.getBalance().compareTo(transferDTO.getTransferFunds()) > 0) throw
+         new ResponseStatusException(HttpStatus.BAD_REQUEST, "The account doesn't have enough funds");
 
-        if (accountTypeRepository.findById(receivingId).get().getSecondaryOwner() == null) {
-            receivingPrimaryOwnersName = accountTypeRepository.findById(receivingId).get().getPrimaryOwner();
-        } else {
-            receivingPrimaryOwnersName = accountTypeRepository.findById(receivingId).get().getPrimaryOwner();
-            receivingSecondaryOwnersName = accountTypeRepository.findById(receivingId).get().getSecondaryOwner();
+        if(receivingAccount.getPrimaryOwner().getName().equals(transferDTO.getReceivingOwnersName())
+                || receivingAccount.getSecondaryOwner().getName().equals(transferDTO.getReceivingOwnersName())){
+
+            sendingAccount.setBalance(sendingAccount.getBalance().subtract(transferDTO.getTransferFunds()));
+            receivingAccount.setBalance(receivingAccount.getBalance().add(transferDTO.getTransferFunds()));
+            accountTypeRepository.saveAll(List.of(receivingAccount, sendingAccount));
         }
 
-
-        if (sendingAccountBalance.compareTo(transferFunds) == -1) throw new IllegalArgumentException("Not enough funds to make this transaction");
-        if (accountTypeRepository.findById(receivingId).get().getStatus().equals(Status.FROZEN)) throw new IllegalArgumentException("Receiving Account is Frozen");
-
-
-        // Deberia hacer .getText().toString() ???
-        if (receivingPrimaryOwnersName.equals(receivingOwnersName) || receivingSecondaryOwnersName.equals(receivingOwnersName) ) {
-            accountTypeRepository.findById(sendingId).get().setBalance(sendingAccountBalance.subtract(transferFunds));
-            accountTypeRepository.findById(receivingId).get().setBalance(getBalance(receivingId).add(transferFunds));
-        } else throw new IllegalArgumentException("Owners receiving name does not mach with this account");
-
-
+        return sendingAccount.getBalance();
     }
-
 
 }
