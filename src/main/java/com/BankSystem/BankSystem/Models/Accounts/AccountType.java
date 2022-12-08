@@ -33,7 +33,7 @@ public abstract class AccountType {
     public AccountType() {
     }
 
-    //Quitar el status del constructor?
+
     public AccountType( AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, Status status) {
 
         this.primaryOwner = primaryOwner;

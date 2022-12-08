@@ -12,7 +12,8 @@ public class ThirdParty{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String key;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String hashKey;
 
     private String name;
 
@@ -20,7 +21,7 @@ public class ThirdParty{
     }
 
     public ThirdParty(String key, String name) {
-        this.key = key;
+        this.hashKey = key;
         this.name = name;
     }
 
@@ -32,12 +33,12 @@ public class ThirdParty{
         this.id = id;
     }
 
-    public String getKey() {
-        return key;
+    public String getHashKey() {
+        return hashKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setHashKey(String hashKey) {
+        this.hashKey = hashKey;
     }
 
     public String getName() {
