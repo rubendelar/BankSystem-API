@@ -16,7 +16,7 @@ public class Savings extends AccountType {
     @DecimalMax(value = "1000")
     private BigDecimal minimumBalance;
 
-    @DecimalMin(value = "0.5")
+    @DecimalMax(value = "0.5")
     private BigDecimal interestRate;
 
     private LocalDate lastTimeInterestRate = LocalDate.now();
@@ -30,6 +30,8 @@ public class Savings extends AccountType {
 
     }
 
+    public Savings() {
+    }
 
     public BigDecimal getMinimumBalance() {
         return minimumBalance;

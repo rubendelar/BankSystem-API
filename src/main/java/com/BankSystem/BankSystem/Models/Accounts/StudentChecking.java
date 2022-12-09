@@ -14,5 +14,8 @@ public class StudentChecking extends AccountType {
                            BigDecimal balance, String secretKey) {
         super(primaryOwner, secondaryOwner, balance, secretKey);
     }
+
+    public StudentChecking() {
+    }
 }
 

@@ -12,4 +12,6 @@ public class Admins extends UserType {
         super(name, password);
     }
 
+    public Admins() {
+    }
 }

@@ -1,7 +1,10 @@
 package com.BankSystem.BankSystem.Controllers;
 
 import com.BankSystem.BankSystem.Models.Accounts.AccountType;
+import com.BankSystem.BankSystem.Models.Accounts.CreditCard;
+import com.BankSystem.BankSystem.Models.Accounts.Savings;
 import com.BankSystem.BankSystem.Models.Users.ThirdParty;
+import com.BankSystem.BankSystem.Repositories.Accounts.SavingsRepository;
 import com.BankSystem.BankSystem.Services.AdminsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,9 @@ public class AdminsController {
 
     @Autowired
     AdminsService adminService;
+
+    @Autowired
+    SavingsRepository savingsRepository;
 
 
     @GetMapping("/account-balance")
@@ -35,17 +41,33 @@ public class AdminsController {
        return adminService.createThirdPartyUser(name);
     }
 
-    @DeleteMapping("/account-deletion")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteAccount(@RequestParam Integer id) {
-        return adminService.deleteAccount(id);
+    @PostMapping("/savingsAccount-creation")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Savings createSavingsAccount(@RequestBody Savings savingsAccount) {
+        return adminService.createSavingsAccount(savingsAccount);
     }
+
+    @PostMapping("/creditCardAccount-creation")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CreditCard createCreditCardAccount(@RequestBody CreditCard creditCardAccount) {
+        return adminService.createCreditCardAccount(creditCardAccount);
+    }
+
+
 
     @DeleteMapping("/thirdParty-deletion")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String deleteThirdPartyUser(@RequestParam Integer id) {
         return adminService.deleteThirdPartyUser(id);
     }
+
+    @DeleteMapping("/account-deletion")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public String deleteAccount(@RequestParam Integer id) {
+        return adminService.deleteAccount(id);
+    }
+
+
 
 
     @PatchMapping("/thirdParty-setter")

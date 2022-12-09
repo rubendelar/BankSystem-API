@@ -19,7 +19,7 @@ public class AccountHolders extends UserType {
     @Embedded
     private Address privateAddress;
 
-    @Embedded
+
     private String mailingAddress;
 
     @OneToMany(mappedBy = "primaryOwner", cascade = CascadeType.ALL)

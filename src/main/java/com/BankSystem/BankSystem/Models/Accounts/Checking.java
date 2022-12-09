@@ -21,6 +21,9 @@ public class Checking extends AccountType {
         super(primaryOwner, secondaryOwner, balance, secretKey);
     }
 
+    public Checking() {
+    }
+
     public BigDecimal getMinimumBalance() {
         return minimumBalance;
     }

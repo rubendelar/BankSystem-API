@@ -1,9 +1,15 @@
 package com.BankSystem.BankSystem.Services;
 
 import com.BankSystem.BankSystem.Models.Accounts.AccountType;
+import com.BankSystem.BankSystem.Models.Accounts.Checking;
+import com.BankSystem.BankSystem.Models.Accounts.CreditCard;
+import com.BankSystem.BankSystem.Models.Accounts.Savings;
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
 import com.BankSystem.BankSystem.Models.Users.ThirdParty;
 import com.BankSystem.BankSystem.Repositories.Accounts.AccountTypeRepository;
+import com.BankSystem.BankSystem.Repositories.Accounts.CheckingRepository;
+import com.BankSystem.BankSystem.Repositories.Accounts.CreditCardRepository;
+import com.BankSystem.BankSystem.Repositories.Accounts.SavingsRepository;
 import com.BankSystem.BankSystem.Repositories.Users.AdminsRepository;
 import com.BankSystem.BankSystem.Repositories.Users.ThirdPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +27,13 @@ public class AdminsService {
     @Autowired
     AccountTypeRepository accountTypeRepository;
     @Autowired
+    SavingsRepository savingsRepository;
+    @Autowired
+    CreditCardRepository creditCardRepository;
+    @Autowired
     ThirdPartyRepository thirdPartyRepository;
+    @Autowired
+    CheckingRepository checkingRepository;
 
     public BigDecimal getAnyAccountBalance(Integer id) {
         if (accountTypeRepository.findById(id).isEmpty() || accountTypeRepository.findById(id).get().getBalance() == null)
@@ -37,6 +49,15 @@ public class AdminsService {
             return accountTypeRepository.save(accountType);
         }
     }
+
+    public Savings createSavingsAccount(Savings savingsAccount){
+        return savingsRepository.save(savingsAccount);
+    }
+
+    public CreditCard createCreditCardAccount(CreditCard creditCardAccount){
+        return creditCardRepository.save(creditCardAccount);
+    }
+
 
     public ThirdParty createThirdPartyUser (String name) {
         ThirdParty thirdParty = new ThirdParty(name);

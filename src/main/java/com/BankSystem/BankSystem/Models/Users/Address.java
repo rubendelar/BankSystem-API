@@ -6,11 +6,14 @@ import jakarta.persistence.*;
 public class Address {
 
     private String streetName;
-    private String City;
+    private String city;
 
     public Address(String streetName, String city) {
         this.streetName = streetName;
-        City = city;
+        this.city = city;
+    }
+
+    public Address() {
     }
 
     public String getStreetName() {
@@ -22,10 +25,10 @@ public class Address {
     }
 
     public String getCity() {
-        return City;
+        return city;
     }
 
     public void setCity(String city) {
-        City = city;
+        this.city = city;
     }
 }
