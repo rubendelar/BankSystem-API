@@ -1,7 +1,10 @@
 package com.BankSystem.BankSystem.Models.Users;
 
 import com.BankSystem.BankSystem.Models.Accounts.AccountType;
+import com.BankSystem.BankSystem.Models.LocalDateSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
 
@@ -14,6 +17,8 @@ public class AccountHolders extends UserType {
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     @Past
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateOfBirth;
 
     @Embedded

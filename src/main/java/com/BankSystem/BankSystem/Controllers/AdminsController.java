@@ -34,12 +34,12 @@ public class AdminsController {
         return adminService.setAnyAccountBalance(id, fund);
     }
 
-
     @PostMapping("/thirdParty-creation")
     @ResponseStatus(HttpStatus.CREATED)
     public ThirdParty createThirdPartyUser(@RequestParam String name) {
        return adminService.createThirdPartyUser(name);
     }
+
 
     @PostMapping("/savingsAccount-creation")
     @ResponseStatus(HttpStatus.CREATED)

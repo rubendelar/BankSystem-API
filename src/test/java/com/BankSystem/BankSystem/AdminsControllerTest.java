@@ -60,14 +60,17 @@ public class AdminsControllerTest {
 
 
 Savings savingAccount;
+Admins admin;
+
+AccountHolders primaryOwner;
 
     @BeforeEach
     void setUp(){
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         //objectMapper.findAndRegisterModules();
 
-        Admins admin = new Admins("High Commander", "pass123");
-        AccountHolders primaryOwner = new AccountHolders("Mozart","pass123", LocalDate.of(2000,10,10), new Address("Calle Emperador", "España"), null );
+        admin = new Admins("High Commander", "pass123");
+        primaryOwner = new AccountHolders("Mozart","pass123", LocalDate.of(2000,10,10), new Address("Calle Emperador", "España"), null );
         savingAccount= new Savings(primaryOwner,null, BigDecimal.valueOf(200),"pepeymaria123",BigDecimal.valueOf(200),BigDecimal.valueOf(0.3));
 
         accountHoldersRepository.save(primaryOwner);
@@ -96,29 +99,18 @@ Savings savingAccount;
     }
 
     @Test
-    void getAnyAccountBalance() throws Exception {
+    void createSavingsAccount() throws Exception {
 
-//        String body = objectMapper.writeValueAsString(savingAccount);
-        MvcResult result = mockMvc.perform(get("/account-balance")
-                        .param("id", String.valueOf(savingAccount.getId()))
+        String body = objectMapper.writeValueAsString(savingAccount);
+        MvcResult result = mockMvc.perform(get("/savingsAccount-creation")
+                        .content(body)
                         .contentType(MediaType.APPLICATION_JSON))
 
-                .andExpect(status().isOk()).andReturn();
+                .andExpect(status().isCreated()).andReturn();
 
         assertTrue(result.getResponse().getContentAsString().contains("200"));
+
     }
-
-
-
-
-
-
-
-//    @PatchMapping("/account-setBalance")
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    private AccountType setAnyAccountBalance(@RequestParam Integer id, BigDecimal fund) {
-//        return adminService.setAnyAccountBalance(id, fund);
-//    }
 
 
 
@@ -133,7 +125,8 @@ Savings savingAccount;
 //    @Test
 //    void deleteAccount() throws Exception {
 //        MvcResult result = mockMvc.perform(delete("/account-deletion")
-//                .param("id",savingAccount.getId())).andExpect(status().isAccepted()).andReturn();
+//                .param("id",savingAccount.getId()))
+//                .andExpect(status().isAccepted()).andReturn();
 //
 //        assertTrue(accountTypeRepository.findById(savingAccount.getId()).isEmpty());
 //    }
@@ -144,11 +137,7 @@ Savings savingAccount;
 
 
 
-//    @DeleteMapping("/thirdParty-deletion")
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    public String deleteThirdPartyUser(@RequestParam Integer id) {
-//        return adminService.deleteThirdPartyUser(id);
-//    }
+
 
 
 
