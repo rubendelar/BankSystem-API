@@ -22,10 +22,10 @@ public class AccountHolders extends UserType {
     @Embedded
     private String mailingAddress;
 
-    @OneToMany(mappedBy = "AccountHolders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryOwner", cascade = CascadeType.ALL)
     private List<AccountType> primaryOwnerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "AccountHolders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "secondaryOwner", cascade = CascadeType.ALL)
     private List<AccountType> secondaryOwnerList = new ArrayList<>();
 
     public AccountHolders(String name, String password, LocalDate dateOfBirth, Address privateAddress, String mailingAddress) {

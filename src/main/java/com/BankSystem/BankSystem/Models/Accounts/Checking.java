@@ -17,8 +17,8 @@ public class Checking extends AccountType {
 
     private final BigDecimal monthlyMaintenanceFee = new BigDecimal(12);
 
-    public Checking(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, String secretKey, Status status) {
-        super(primaryOwner, secondaryOwner, balance, secretKey, status);
+    public Checking(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, String secretKey) {
+        super(primaryOwner, secondaryOwner, balance, secretKey);
     }
 
     public BigDecimal getMinimumBalance() {

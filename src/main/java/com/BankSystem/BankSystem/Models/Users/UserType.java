@@ -6,8 +6,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Inheritance
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UserType {
 
     @Id

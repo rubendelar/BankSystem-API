@@ -8,4 +8,8 @@ import jakarta.persistence.Id;
 @Entity
 public class Admins extends UserType {
 
+    public Admins(String name, String password) {
+        super(name, password);
+    }
+
 }

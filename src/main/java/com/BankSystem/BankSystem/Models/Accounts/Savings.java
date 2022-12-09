@@ -22,13 +22,14 @@ public class Savings extends AccountType {
     private LocalDate lastTimeInterestRate = LocalDate.now();
 
     public Savings(AccountHolders primaryOwner, AccountHolders secondaryOwner,
-                   BigDecimal balance, String secretKey, Status status, BigDecimal minimumBalance,
-                   BigDecimal interestRate, LocalDate lastTimeInterestRate) {
-        super(primaryOwner, secondaryOwner, balance, secretKey, status);
-        this.minimumBalance = minimumBalance;
-        this.interestRate = interestRate;
-        this.lastTimeInterestRate = lastTimeInterestRate;
+                   BigDecimal balance, String secretKey, BigDecimal minimumBalance,
+                   BigDecimal interestRate) {
+        super(primaryOwner, secondaryOwner, balance, secretKey);
+        setMinimumBalance(minimumBalance);
+        setInterestRate(interestRate);
+
     }
+
 
     public BigDecimal getMinimumBalance() {
         return minimumBalance;

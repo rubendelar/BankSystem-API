@@ -60,9 +60,6 @@ public class AdminsService {
     }
 
 
-
-
-
     public ThirdParty setThirdPartyUserName (Integer id, String newName) {
        if (thirdPartyRepository.findById(id).isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find Third Party user with provided ID");
        else {

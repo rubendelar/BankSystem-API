@@ -11,8 +11,8 @@ import java.util.List;
 public class StudentChecking extends AccountType {
 
     public StudentChecking(AccountHolders primaryOwner, AccountHolders secondaryOwner,
-                           BigDecimal balance, String secretKey, Status status) {
-        super(primaryOwner, secondaryOwner, balance, secretKey, status);
+                           BigDecimal balance, String secretKey) {
+        super(primaryOwner, secondaryOwner, balance, secretKey);
     }
 }
 

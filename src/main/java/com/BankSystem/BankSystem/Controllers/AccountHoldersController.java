@@ -37,8 +37,4 @@ public class AccountHoldersController {
         return accountHoldersService.transfer(transferDTO);
     }
 
-
-
-
-
 }

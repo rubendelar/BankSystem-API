@@ -16,13 +16,13 @@ public class AdminsController {
     AdminsService adminService;
 
 
-    @GetMapping
+    @GetMapping("/account-balance")
     @ResponseStatus(HttpStatus.OK)
     public BigDecimal getAnyAccountBalance(@RequestParam Integer id) {
         return adminService.getAnyAccountBalance(id);
     }
 
-    @PatchMapping
+    @PatchMapping("/account-setBalance")
     @ResponseStatus(HttpStatus.ACCEPTED)
     private AccountType setAnyAccountBalance(@RequestParam Integer id, BigDecimal fund) {
         return adminService.setAnyAccountBalance(id, fund);

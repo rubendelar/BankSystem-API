@@ -23,12 +23,11 @@ public class CreditCard extends AccountType {
     private LocalDate lastTimeInterestRate = LocalDate.now();
 
     public CreditCard(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance,
-                      String secretKey, Status status, BigDecimal creditLimit, BigDecimal interestRate,
-                      LocalDate lastTimeInterestRate) {
-        super(primaryOwner, secondaryOwner, balance, secretKey, status);
+                      String secretKey, BigDecimal creditLimit, BigDecimal interestRate) {
+        super(primaryOwner, secondaryOwner, balance, secretKey);
         this.creditLimit = creditLimit;
         this.interestRate = interestRate;
-        this.lastTimeInterestRate = lastTimeInterestRate;
+
     }
 
     public BigDecimal getCreditLimit() {

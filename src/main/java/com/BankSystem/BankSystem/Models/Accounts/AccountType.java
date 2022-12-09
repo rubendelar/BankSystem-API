@@ -2,12 +2,13 @@ package com.BankSystem.BankSystem.Models.Accounts;
 
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Inheritance
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AccountType {
 
     @Id
@@ -15,10 +16,10 @@ public abstract class AccountType {
     private Integer id;
 
     @ManyToOne
+    @NotNull
     private AccountHolders primaryOwner;
 
     @ManyToOne
-    //HACERLO OPCIONAL
     private AccountHolders secondaryOwner;
 
     private BigDecimal balance;
@@ -35,12 +36,11 @@ public abstract class AccountType {
     public AccountType() {
     }
 
-    public AccountType(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, String secretKey, Status status) {
+    public AccountType(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance, String secretKey) {
         this.primaryOwner = primaryOwner;
         this.secondaryOwner = secondaryOwner;
         this.balance = balance;
         this.secretKey = secretKey;
-        this.status = status;
     }
 
 
