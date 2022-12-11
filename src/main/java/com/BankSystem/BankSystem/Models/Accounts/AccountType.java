@@ -1,9 +1,12 @@
 package com.BankSystem.BankSystem.Models.Accounts;
 
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -22,12 +25,16 @@ public abstract class AccountType {
     @ManyToOne
     private AccountHolders secondaryOwner;
 
+
     private BigDecimal balance;
 
     private BigDecimal penaltyFee = BigDecimal.valueOf(40);
 
     private String secretKey;
 
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate accountCreation = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
@@ -73,15 +80,23 @@ public abstract class AccountType {
     }
 
     public void setBalance(BigDecimal balance) {
-        if (this instanceof Savings savingsAccount) {
-            if (savingsAccount.getBalance().compareTo(savingsAccount.getMinimumBalance())==-1){
-                savingsAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+
+        //No Consigo que funcione
+
+        if (this instanceof Savings) {
+            Savings savingAccount = (Savings) this;
+            if (savingAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) < 0){
+                savingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+
             }
+
         }
         if (this instanceof Checking checkingAccount) {
-            if (checkingAccount.getBalance().compareTo(checkingAccount.getMinimumBalance())==-1){
+            if (checkingAccount.getBalance().compareTo(checkingAccount.getMinimumBalance()) < 0){
                 checkingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+
             }
+
         }
         this.balance = balance;
     }

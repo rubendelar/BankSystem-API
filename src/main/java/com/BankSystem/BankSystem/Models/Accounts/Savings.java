@@ -1,12 +1,14 @@
 package com.BankSystem.BankSystem.Models.Accounts;
 
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 public class Savings extends AccountType {
@@ -19,6 +21,9 @@ public class Savings extends AccountType {
     @DecimalMax(value = "0.5")
     private BigDecimal interestRate;
 
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastTimeInterestRate = LocalDate.now();
 
     public Savings(AccountHolders primaryOwner, AccountHolders secondaryOwner,
@@ -29,7 +34,6 @@ public class Savings extends AccountType {
         setInterestRate(interestRate);
 
     }
-
     public Savings() {
     }
 

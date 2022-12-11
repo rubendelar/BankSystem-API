@@ -3,7 +3,6 @@ package com.BankSystem.BankSystem.Services;
 import com.BankSystem.BankSystem.Models.Accounts.AccountType;
 import com.BankSystem.BankSystem.Models.Accounts.Status;
 import com.BankSystem.BankSystem.Models.DTO.ThirdPartyTransferDTO;
-import com.BankSystem.BankSystem.Models.Users.AccountHolders;
 import com.BankSystem.BankSystem.Repositories.Accounts.AccountTypeRepository;
 import com.BankSystem.BankSystem.Repositories.Users.ThirdPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+
 
 @Service
 public class ThirdPartyService {
@@ -22,7 +22,7 @@ public class ThirdPartyService {
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
 
-    public AccountType thirdPartyTransfer (ThirdPartyTransferDTO thirdPartyTransferDTO) {
+    public BigDecimal thirdPartyTransfer (ThirdPartyTransferDTO thirdPartyTransferDTO) {
         if (thirdPartyRepository.findById(thirdPartyTransferDTO.getThirdPartyId()).isEmpty()) throw
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "ThirdParty not found");
         if (!thirdPartyTransferDTO.getHashKey().equals(thirdPartyRepository.findById(thirdPartyTransferDTO.getThirdPartyId()).get().getHashKey())) throw
@@ -36,7 +36,8 @@ public class ThirdPartyService {
 
         AccountType account = accountTypeRepository.findById(thirdPartyTransferDTO.getAccountId()).get();
         account.setBalance(account.getBalance().add(thirdPartyTransferDTO.getTransferFunds()));
-        return accountTypeRepository.save(account);
+        accountTypeRepository.save(account);
+        return account.getBalance();
     }
 
 }

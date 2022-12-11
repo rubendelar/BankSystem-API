@@ -1,14 +1,15 @@
 package com.BankSystem.BankSystem.Models.Accounts;
 
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 public class CreditCard extends AccountType {
@@ -20,6 +21,8 @@ public class CreditCard extends AccountType {
     @DecimalMin(value = "0.1")
     private BigDecimal interestRate;
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastTimeInterestRate = LocalDate.now();
 
     public CreditCard(AccountHolders primaryOwner, AccountHolders secondaryOwner, BigDecimal balance,

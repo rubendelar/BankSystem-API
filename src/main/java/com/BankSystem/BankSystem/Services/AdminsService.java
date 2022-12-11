@@ -1,24 +1,21 @@
 package com.BankSystem.BankSystem.Services;
 
-import com.BankSystem.BankSystem.Models.Accounts.AccountType;
-import com.BankSystem.BankSystem.Models.Accounts.Checking;
-import com.BankSystem.BankSystem.Models.Accounts.CreditCard;
-import com.BankSystem.BankSystem.Models.Accounts.Savings;
+import com.BankSystem.BankSystem.Models.Accounts.*;
+import com.BankSystem.BankSystem.Models.DTO.CheckingStudentCheckingAccountCreationDTO;
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
 import com.BankSystem.BankSystem.Models.Users.ThirdParty;
-import com.BankSystem.BankSystem.Repositories.Accounts.AccountTypeRepository;
-import com.BankSystem.BankSystem.Repositories.Accounts.CheckingRepository;
-import com.BankSystem.BankSystem.Repositories.Accounts.CreditCardRepository;
-import com.BankSystem.BankSystem.Repositories.Accounts.SavingsRepository;
-import com.BankSystem.BankSystem.Repositories.Users.AdminsRepository;
+import com.BankSystem.BankSystem.Repositories.Accounts.*;
+import com.BankSystem.BankSystem.Repositories.Users.AccountHoldersRepository;
 import com.BankSystem.BankSystem.Repositories.Users.ThirdPartyRepository;
+import com.BankSystem.BankSystem.Repositories.Users.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.Period;
+
 
 @Service
 public class AdminsService {
@@ -31,9 +28,14 @@ public class AdminsService {
     @Autowired
     CreditCardRepository creditCardRepository;
     @Autowired
-    ThirdPartyRepository thirdPartyRepository;
+    StudentCheckingRepository studentCheckingRepository;
     @Autowired
-    CheckingRepository checkingRepository;
+    AccountHoldersRepository accountHoldersRepository;
+    @Autowired
+    UserTypeRepository userTypeRepository;
+    @Autowired
+    ThirdPartyRepository thirdPartyRepository;
+
 
     public BigDecimal getAnyAccountBalance(Integer id) {
         if (accountTypeRepository.findById(id).isEmpty() || accountTypeRepository.findById(id).get().getBalance() == null)
@@ -50,13 +52,39 @@ public class AdminsService {
         }
     }
 
+    public CreditCard createCreditCardAccount(CreditCard creditCardAccount){ return  creditCardRepository.save(creditCardAccount);}
+
     public Savings createSavingsAccount(Savings savingsAccount){
         return savingsRepository.save(savingsAccount);
     }
 
-    public CreditCard createCreditCardAccount(CreditCard creditCardAccount){
-        return creditCardRepository.save(creditCardAccount);
+
+    public AccountType createCheckingAccount( CheckingStudentCheckingAccountCreationDTO checkingStudentCheckingAccountCreationDTO){
+
+
+        AccountHolders primaryOwner = accountHoldersRepository.getReferenceById(checkingStudentCheckingAccountCreationDTO.getPrimaryOwnerUserId());
+        AccountHolders secondaryOwner;
+        if (checkingStudentCheckingAccountCreationDTO.getSecondaryOwnerUserId() != null) {
+             secondaryOwner = accountHoldersRepository.getReferenceById(checkingStudentCheckingAccountCreationDTO.getSecondaryOwnerUserId());
+        } else secondaryOwner = null;
+
+
+        if (Period.between(primaryOwner.getDateOfBirth(), LocalDate.now()).getYears() >= 24){
+            Checking checkingAccount = new Checking(primaryOwner,
+                    secondaryOwner, checkingStudentCheckingAccountCreationDTO.getBalance(),
+                    checkingStudentCheckingAccountCreationDTO.getSecretKey());
+            return accountTypeRepository.save(checkingAccount);
+
+        } else {
+            StudentChecking studentCheckingAccount = new StudentChecking(primaryOwner,
+                    secondaryOwner, checkingStudentCheckingAccountCreationDTO.getBalance(),
+                    checkingStudentCheckingAccountCreationDTO.getSecretKey());
+           return accountTypeRepository.save(studentCheckingAccount);
+
+        }
     }
+
+    public StudentChecking createStudentCheckingAccount(StudentChecking studentCheckingAccount){ return studentCheckingRepository.save(studentCheckingAccount);}
 
 
     public ThirdParty createThirdPartyUser (String name) {
@@ -64,20 +92,18 @@ public class AdminsService {
         return thirdPartyRepository.save(thirdParty);
     }
 
-    public String deleteAccount (Integer id) {
+    public void deleteAccount (Integer id) {
         if (accountTypeRepository.findById(id).isPresent()){
             accountTypeRepository.deleteById(id);
         } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find Account with provided ID");
 
-        return "Account has been deleted";
     }
 
-    public String deleteThirdPartyUser (Integer id) {
+    public void deleteThirdPartyUser (Integer id) {
         if (thirdPartyRepository.findById(id).isPresent()){
         thirdPartyRepository.deleteById(id);
         } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not find Third Party user with provided ID");
 
-        return "ThirdPartyUser has been deleted";
     }
 
 

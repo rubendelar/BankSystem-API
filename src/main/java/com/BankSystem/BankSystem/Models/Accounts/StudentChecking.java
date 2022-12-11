@@ -1,11 +1,10 @@
 package com.BankSystem.BankSystem.Models.Accounts;
 
 import com.BankSystem.BankSystem.Models.Users.AccountHolders;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
+
 
 @Entity
 public class StudentChecking extends AccountType {

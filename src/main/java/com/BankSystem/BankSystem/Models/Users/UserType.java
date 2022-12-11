@@ -1,10 +1,7 @@
 package com.BankSystem.BankSystem.Models.Users;
 
-
-import com.BankSystem.BankSystem.Models.Accounts.AccountType;
 import jakarta.persistence.*;
 
-import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

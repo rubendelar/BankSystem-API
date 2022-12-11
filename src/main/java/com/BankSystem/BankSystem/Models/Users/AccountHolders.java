@@ -1,16 +1,18 @@
 package com.BankSystem.BankSystem.Models.Users;
 
 import com.BankSystem.BankSystem.Models.Accounts.AccountType;
-import com.BankSystem.BankSystem.Models.LocalDateSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 public class AccountHolders extends UserType {
@@ -26,11 +28,13 @@ public class AccountHolders extends UserType {
 
 
     private String mailingAddress;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "primaryOwner", cascade = CascadeType.ALL)
-    private List<AccountType> primaryOwnerList = new ArrayList<>();
 
+    private List<AccountType> primaryOwnerList = new ArrayList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "secondaryOwner", cascade = CascadeType.ALL)
+
     private List<AccountType> secondaryOwnerList = new ArrayList<>();
 
     public AccountHolders(String name, String password, LocalDate dateOfBirth, Address privateAddress, String mailingAddress) {
@@ -38,7 +42,6 @@ public class AccountHolders extends UserType {
         this.dateOfBirth = dateOfBirth;
         this.privateAddress = privateAddress;
         this.mailingAddress = mailingAddress;
-
     }
 
     public AccountHolders() {
@@ -83,4 +86,5 @@ public class AccountHolders extends UserType {
     public void setSecondaryOwnerList(List<AccountType> secondaryOwnerList) {
         this.secondaryOwnerList = secondaryOwnerList;
     }
+
 }

@@ -1,8 +1,7 @@
 package com.BankSystem.BankSystem.Controllers;
 
-import com.BankSystem.BankSystem.Models.Accounts.AccountType;
-import com.BankSystem.BankSystem.Models.Accounts.CreditCard;
-import com.BankSystem.BankSystem.Models.Accounts.Savings;
+import com.BankSystem.BankSystem.Models.Accounts.*;
+import com.BankSystem.BankSystem.Models.DTO.CheckingStudentCheckingAccountCreationDTO;
 import com.BankSystem.BankSystem.Models.Users.ThirdParty;
 import com.BankSystem.BankSystem.Repositories.Accounts.SavingsRepository;
 import com.BankSystem.BankSystem.Services.AdminsService;
@@ -11,15 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @RestController
 public class AdminsController {
 
     @Autowired
     AdminsService adminService;
-
-    @Autowired
-    SavingsRepository savingsRepository;
 
 
     @GetMapping("/account-balance")
@@ -29,7 +26,7 @@ public class AdminsController {
     }
 
     @PatchMapping("/account-setBalance")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.CREATED)
     private AccountType setAnyAccountBalance(@RequestParam Integer id, BigDecimal fund) {
         return adminService.setAnyAccountBalance(id, fund);
     }
@@ -53,21 +50,30 @@ public class AdminsController {
         return adminService.createCreditCardAccount(creditCardAccount);
     }
 
+    @PostMapping("/checkingAccount-creation")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountType createCheckingAccount(@RequestBody CheckingStudentCheckingAccountCreationDTO checkingStudentCheckingAccountCreationDTO) {
+        return adminService.createCheckingAccount(checkingStudentCheckingAccountCreationDTO);
+    }
+
+    @PostMapping("/directStudentCheckingAccount-creation")
+    @ResponseStatus(HttpStatus.CREATED)
+    StudentChecking createStudentCheckingAccount(@RequestBody StudentChecking studentCheckingAccount) {
+        return adminService.createStudentCheckingAccount(studentCheckingAccount);
+    }
 
 
     @DeleteMapping("/thirdParty-deletion")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteThirdPartyUser(@RequestParam Integer id) {
-        return adminService.deleteThirdPartyUser(id);
+    public void deleteThirdPartyUser(@RequestParam Integer id) {
+        adminService.deleteThirdPartyUser(id);
     }
 
     @DeleteMapping("/account-deletion")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteAccount(@RequestParam Integer id) {
-        return adminService.deleteAccount(id);
+    public void deleteAccount(@RequestParam Integer id) {
+         adminService.deleteAccount(id);
     }
-
-
 
 
     @PatchMapping("/thirdParty-setter")

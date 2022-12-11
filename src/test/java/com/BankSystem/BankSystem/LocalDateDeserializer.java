@@ -1,4 +1,4 @@
-package com.BankSystem.BankSystem.Models;
+package com.BankSystem.BankSystem;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

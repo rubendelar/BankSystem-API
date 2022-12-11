@@ -2,7 +2,6 @@ package com.BankSystem.BankSystem.Controllers;
 
 import com.BankSystem.BankSystem.Models.Accounts.AccountType;
 import com.BankSystem.BankSystem.Models.DTO.TransferDTO;
-import com.BankSystem.BankSystem.Repositories.Users.AccountHoldersRepository;
 import com.BankSystem.BankSystem.Services.AccountHoldersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class AccountHoldersController {
     @GetMapping("/accounts")
     @ResponseStatus(HttpStatus.OK)
     public List<AccountType> getAccounts(@RequestParam Integer id) {
-        return accountHoldersService.getAccounts(id);
+        return accountHoldersService.getAccountInfo(id);
     }
 
     @GetMapping("/accounts-balance")
@@ -33,7 +32,7 @@ public class AccountHoldersController {
 
     @PatchMapping("/accounts-transfer")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public BigDecimal transfer(@RequestParam TransferDTO transferDTO) {
+    public BigDecimal transfer(@RequestBody TransferDTO transferDTO) {
         return accountHoldersService.transfer(transferDTO);
     }
 

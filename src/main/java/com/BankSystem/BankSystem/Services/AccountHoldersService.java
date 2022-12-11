@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
@@ -31,7 +30,7 @@ public class AccountHoldersService {
     CreditCardRepository creditCardRepository;
 
 
-    public List<AccountType> getAccounts(Integer id) {
+    public List<AccountType> getAccountInfo(Integer id) {
 
         if (accountHoldersRepository.findById(id).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
         else return accountHoldersRepository.findById(id).get().getPrimaryOwnerList();
@@ -76,6 +75,8 @@ public class AccountHoldersService {
         //Id it's an account without Interest Rate, this expression will be executed
         return accountTypeRepository.findById(id).get().getBalance();
     }
+
+
 
 
     //To transfer money from any of their accounts to any other account:

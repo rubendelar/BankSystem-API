@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
+
 @RestController
 public class ThirdPartyController {
 
@@ -17,8 +18,8 @@ public class ThirdPartyController {
 
     @PatchMapping("/transfer")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public AccountType thirdPartyTransfer(@RequestHeader String hashKey,
-                                          @RequestParam ThirdPartyTransferDTO thirdPartyTransferDTO) {
+    public BigDecimal thirdPartyTransfer(@RequestHeader String hashKey,
+                                         @RequestParam ThirdPartyTransferDTO thirdPartyTransferDTO) {
         return thirdPartyService.thirdPartyTransfer(thirdPartyTransferDTO);
 
     }
