@@ -91,7 +91,7 @@ public class AccountHoldersService {
         AccountType sendingAccount = accountTypeRepository.findById(transferDTO.getSendingId()).get();
         AccountType receivingAccount = accountTypeRepository.findById(transferDTO.getReceivingId()).get();
 
-        if(sendingAccount.getBalance().compareTo(transferDTO.getTransferFunds()) > 0) throw
+        if(sendingAccount.getBalance().compareTo(transferDTO.getTransferFunds()) < 0) throw
          new ResponseStatusException(HttpStatus.BAD_REQUEST, "The account doesn't have enough funds");
 
         if(receivingAccount.getPrimaryOwner().getName().equals(transferDTO.getReceivingOwnersName())

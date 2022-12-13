@@ -137,8 +137,9 @@ CheckingStudentCheckingAccountCreationDTO checkingStudentCheckingAccountCreation
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON))
 
-                .andExpect(status().isCreated()).andReturn();
+                .andExpect(status().isAccepted()).andReturn();
 
+//        System.err.println(result.getResolvedException().getMessage());
         assertTrue(result.getResponse().getContentAsString().contains("10000"));
 
     }
@@ -150,6 +151,7 @@ CheckingStudentCheckingAccountCreationDTO checkingStudentCheckingAccountCreation
                         .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isCreated()).andReturn();
+        System.err.println(body);
 
         assertTrue(result.getResponse().getContentAsString().contains("Mozart"));
 
@@ -167,10 +169,6 @@ CheckingStudentCheckingAccountCreationDTO checkingStudentCheckingAccountCreation
         assertTrue(result.getResponse().getContentAsString().contains("Mozart"));
 
     }
-
-
-
-
 
 
     @Test

@@ -41,6 +41,7 @@ public class AdminsController {
     @PostMapping("/savingsAccount-creation")
     @ResponseStatus(HttpStatus.CREATED)
     public Savings createSavingsAccount(@RequestBody Savings savingsAccount) {
+        System.err.println(savingsAccount);
         return adminService.createSavingsAccount(savingsAccount);
     }
 

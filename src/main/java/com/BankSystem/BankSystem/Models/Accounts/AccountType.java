@@ -81,7 +81,7 @@ public abstract class AccountType {
 
     public void setBalance(BigDecimal balance) {
 
-        //No Consigo que funcione
+
 
         if (this instanceof Savings) {
             Savings savingAccount = (Savings) this;
@@ -132,5 +132,19 @@ public abstract class AccountType {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountType{" +
+                "id=" + id +
+                ", primaryOwner=" + primaryOwner +
+                ", secondaryOwner=" + secondaryOwner +
+                ", balance=" + balance +
+                ", penaltyFee=" + penaltyFee +
+                ", secretKey='" + secretKey + '\'' +
+                ", accountCreation=" + accountCreation +
+                ", status=" + status +
+                '}';
     }
 }

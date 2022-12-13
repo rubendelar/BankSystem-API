@@ -55,6 +55,7 @@ public class AdminsService {
     public CreditCard createCreditCardAccount(CreditCard creditCardAccount){ return  creditCardRepository.save(creditCardAccount);}
 
     public Savings createSavingsAccount(Savings savingsAccount){
+        System.err.println(savingsAccount);
         return savingsRepository.save(savingsAccount);
     }
 
