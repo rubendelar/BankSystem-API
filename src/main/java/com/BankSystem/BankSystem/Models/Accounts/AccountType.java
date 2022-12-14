@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -81,24 +82,34 @@ public abstract class AccountType {
 
     public void setBalance(BigDecimal balance) {
 
+        this.balance = balance;
 
-
-        if (this instanceof Savings) {
-            Savings savingAccount = (Savings) this;
-            if (savingAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) < 0){
+        if (this instanceof Savings savingAccount) {
+            if (savingAccount.getMinimumBalance() == null) {
+                savingAccount.setMinimumBalance(null);
+            }
+            if (savingAccount.getBalance().compareTo(savingAccount.getMinimumBalance()) < 0) {
                 savingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
 
             }
 
         }
         if (this instanceof Checking checkingAccount) {
-            if (checkingAccount.getBalance().compareTo(checkingAccount.getMinimumBalance()) < 0){
-                checkingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+            if (checkingAccount.getMinimumBalance() == null) {
+                if (checkingAccount.getBalance().compareTo(BigDecimal.valueOf(250)) < 0) {
+                    checkingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+                }
 
+            } else {
+                if (checkingAccount.getBalance().compareTo(checkingAccount.getMinimumBalance()) < 0) {
+                    checkingAccount.setBalance(getBalance().subtract(getPenaltyFee()));
+
+                }
             }
 
+
         }
-        this.balance = balance;
+
     }
 
 

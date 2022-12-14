@@ -63,10 +63,10 @@ public class AdminsService {
     public AccountType createCheckingAccount( CheckingStudentCheckingAccountCreationDTO checkingStudentCheckingAccountCreationDTO){
 
 
-        AccountHolders primaryOwner = accountHoldersRepository.getReferenceById(checkingStudentCheckingAccountCreationDTO.getPrimaryOwnerUserId());
+        AccountHolders primaryOwner = accountHoldersRepository.findById(checkingStudentCheckingAccountCreationDTO.getPrimaryOwnerUserId()).get();
         AccountHolders secondaryOwner;
         if (checkingStudentCheckingAccountCreationDTO.getSecondaryOwnerUserId() != null) {
-             secondaryOwner = accountHoldersRepository.getReferenceById(checkingStudentCheckingAccountCreationDTO.getSecondaryOwnerUserId());
+             secondaryOwner = accountHoldersRepository.findById(checkingStudentCheckingAccountCreationDTO.getSecondaryOwnerUserId()).get();
         } else secondaryOwner = null;
 
 

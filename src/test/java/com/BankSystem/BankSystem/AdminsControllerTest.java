@@ -137,9 +137,9 @@ CheckingStudentCheckingAccountCreationDTO checkingStudentCheckingAccountCreation
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON))
 
-                .andExpect(status().isAccepted()).andReturn();
+                .andExpect(status().isCreated()).andReturn();
 
-//        System.err.println(result.getResolvedException().getMessage());
+
         assertTrue(result.getResponse().getContentAsString().contains("10000"));
 
     }
